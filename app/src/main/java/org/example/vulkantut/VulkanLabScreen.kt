@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -59,11 +60,11 @@ fun VulkanLabScreen(modifier: Modifier = Modifier) {
                 }
             }
         }
-        Text(status, style = androidx.compose.material3.MaterialTheme.typography.bodyMedium)
+        Text(status, style = MaterialTheme.typography.bodyMedium)
         Text(
             "The blue region is drawn with Android Canvas, not Vulkan. " +
                 "Its Surface will become the native Vulkan swapchain target.",
-            style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.bodySmall,
         )
     }
 }
