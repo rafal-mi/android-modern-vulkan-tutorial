@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,7 +36,6 @@ fun VulkanLabScreen(modifier: Modifier = Modifier) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Text("Modern Vulkan Tutorial", style = MaterialTheme.typography.headlineSmall)
         Text("Chapter 1 · Compose-hosted Surface")
         AndroidExternalSurface(
             modifier = Modifier
@@ -61,11 +59,11 @@ fun VulkanLabScreen(modifier: Modifier = Modifier) {
                 }
             }
         }
-        Text(status, style = MaterialTheme.typography.bodyMedium)
+        Text(status, style = androidx.compose.material3.MaterialTheme.typography.bodyMedium)
         Text(
             "The blue region is drawn with Android Canvas, not Vulkan. " +
                 "Its Surface will become the native Vulkan swapchain target.",
-            style = MaterialTheme.typography.bodySmall,
+            style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
         )
     }
 }
