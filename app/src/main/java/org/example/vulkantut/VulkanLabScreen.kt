@@ -1,8 +1,6 @@
 package org.example.vulkantut
 
-import android.graphics.Color as AndroidColor
 import android.util.Log
-import android.view.Surface
 import androidx.compose.foundation.AndroidExternalSurface
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,14 +20,13 @@ import androidx.compose.ui.unit.dp
 private const val TAG = "VulkanSurface"
 
 /**
- * Chapter 1 deliberately renders no Vulkan frames.
- *
- * AndroidExternalSurface creates a real Android Surface; its lifecycle is
- * independent of recomposition and will later drive our native renderer.
+ * Chapter 2: Vulkan instance and platform surface exist, but no swapchain
+ * or frames are submitted yet. The viewport may appear black.
  */
 @Composable
 fun VulkanLabScreen(modifier: Modifier = Modifier) {
     var status by remember { mutableStateOf("Waiting for a Surface") }
+    var nativeInfo by remember { mutableStateOf("No native session yet") }
 
     Column(
         modifier = modifier
@@ -37,7 +34,7 @@ fun VulkanLabScreen(modifier: Modifier = Modifier) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Text("Chapter 1 · Compose-hosted Surface")
+        Text("Chapter 2 · First native Vulkan objects")
         AndroidExternalSurface(
             modifier = Modifier
                 .fillMaxWidth()
@@ -45,36 +42,33 @@ fun VulkanLabScreen(modifier: Modifier = Modifier) {
         ) {
             onSurface { surface, width, height ->
                 Log.d(TAG, "created: ${width}x${height}")
+                var handle = NativeVulkan.create(surface)
                 status = "Created: ${width} × ${height}"
-                surface.drawTestColor()
+                nativeInfo = NativeVulkan.describe(handle)
 
                 surface.onChanged { newWidth, newHeight ->
                     Log.d(TAG, "resized: ${newWidth}x${newHeight}")
                     status = "Resized: ${newWidth} × ${newHeight}"
-                    surface.drawTestColor()
+                    // No swapchain yet; nothing native needs resizing.
                 }
 
                 surface.onDestroyed {
                     Log.d(TAG, "destroyed")
+                    if (handle != 0L) {
+                        NativeVulkan.destroy(handle)
+                        handle = 0L
+                    }
                     status = "Surface destroyed"
+                    nativeInfo = "Native Vulkan session destroyed"
                 }
             }
         }
         Text(status, style = MaterialTheme.typography.bodyMedium)
+        Text(nativeInfo, style = MaterialTheme.typography.bodySmall)
         Text(
-            "The blue region is drawn with Android Canvas, not Vulkan. " +
-                "Its Surface will become the native Vulkan swapchain target.",
+            "No pixels are rendered yet. Chapter 2 creates Vulkan objects; " +
+                "a later chapter will introduce the swapchain.",
             style = MaterialTheme.typography.bodySmall,
         )
-    }
-}
-
-/** One test frame; intentionally no continuous rendering loop yet. */
-private fun Surface.drawTestColor() {
-    val canvas = lockCanvas(null)
-    try {
-        canvas.drawColor(AndroidColor.rgb(26, 72, 114))
-    } finally {
-        unlockCanvasAndPost(canvas)
     }
 }
